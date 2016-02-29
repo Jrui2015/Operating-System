@@ -28,7 +28,7 @@ void free_array(char **arr);
 // ****************************************************************
 // * Main Function                                   			  *
 // ****************************************************************
-int main(int argc, char** argv)
+int main()
 {
     char cmd[MAX_CMD_LEN + 1];   // Store command
     char* params[MAX_PARAMS_AMOUNT + 1];   // Store parameters after parsing
@@ -108,8 +108,8 @@ void delete_new_line(char* cmd)
 int cmd_exec(char** params)
 {
     if (!fork()) {  // Child process
-        execvp(params[0], params); // Execute the cmd
-        char* error = strerror(errno); // If errors 
+      execvp(params[0], params); // Execute the cmd
+        //char* error = strerror(errno); // If errors 
         printf("myShell: Command Not Found: %s\n", params[0]);
         exit(0);  // Exit the child process
     } else {  // Parent process
