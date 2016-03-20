@@ -30,65 +30,64 @@ void free_array(char **arr);
 // ****************************************************************
 int main()
 {
-    char cmd[MAX_CMD_LEN + 1];   // Store command
-    char* params[MAX_PARAMS_AMOUNT + 1];   // Store parameters after parsing
+  char cmd[MAX_CMD_LEN + 1];   // Store command
+  char* params[MAX_PARAMS_AMOUNT + 1];   // Store parameters after parsing
 
-    // Loop to wait for user's input
-    while(1) {
-        // Print command prompt
-        print_prompt();
+  // Loop to wait for user's input
+  while(1) {
+    // Print command prompt
+    print_prompt();
 
-        // Use fgets() to read command
-        if(fgets(cmd, sizeof(cmd), stdin) == NULL) {
-            break;
-        }
-
-        // Delete the "\n" at the end
-        delete_new_line(cmd);
-
-        // Split cmd into an array of parameters
-        cmd_to_params(cmd, params);
-        
-        // Exit or Quit:
-        if (strcmp(params[0], "exit") == 0 || strcmp(params[0], "quit") == 0) {
-            break;
-        } else {
-            cmd_exec(params); // Execute command
-        }
+    // Use fgets() to read command
+    if(fgets(cmd, sizeof(cmd), stdin) == NULL) {
+      break;
     }
 
-    // Avoid memory leak:
-    free_array(params);
-    
-    // End of main
-    return 0;
+    // Delete the "\n" at the end
+    delete_new_line(cmd);
+
+    // Split cmd into an array of parameters
+    cmd_to_params(cmd, params);
+
+    // Exit or Quit:
+    if (strcmp(params[0], "exit") == 0 || strcmp(params[0], "quit") == 0) {
+      break;
+    } else {
+      cmd_exec(params); // Execute command
+    }
+  }
+
+  // Avoid memory leak:
+  free_array(params);
+
+  // End of main
+  return 0;
 }
 
 
 // ****************************************************************
 // * This function print the command prompt         			  *
 // ****************************************************************
-void print_prompt() 
+void print_prompt()
 {
-    char *username = calloc(BUFFERSIZE, sizeof(char*));
-    username = getlogin();
-    printf("%s@myShell ==> ", username);
+  char *username = calloc(BUFFERSIZE, sizeof(char*));
+  username = getlogin();
+  printf("%s@myShell ==> ", username);
 }
-
 
 // ****************************************************************
 // * Split cmd into array of parameters by blank      			  *
 // ****************************************************************
 void cmd_to_params(char* cmd, char** params)
 {
-    int i = 0;
-    while (i < MAX_PARAMS_AMOUNT) {
-        params[i] = strsep(&cmd, " "); // split
-        if (params[i] == NULL) {
-            break;
-        }
-        i++;
+  int i = 0;
+  while (i < MAX_PARAMS_AMOUNT) {
+    params[i] = strsep(&cmd, " "); // split
+    if (params[i] == NULL) {
+      break;
     }
+    i++;
+  }
 }
 
 // ****************************************************************
@@ -96,9 +95,9 @@ void cmd_to_params(char* cmd, char** params)
 // ****************************************************************
 void delete_new_line(char* cmd)
 {
-    if(cmd[strlen(cmd)-1] == '\n') {
-        cmd[strlen(cmd)-1] = '\0';
-    }
+  if(cmd[strlen(cmd)-1] == '\n') {
+    cmd[strlen(cmd)-1] = '\0';
+  }
 }
 
 // ****************************************************************
@@ -107,15 +106,15 @@ void delete_new_line(char* cmd)
 // ****************************************************************
 int cmd_exec(char** params)
 {
-    if (!fork()) {  // Child process
-      execvp(params[0], params); // Execute the cmd
-        //char* error = strerror(errno); // If errors 
-        printf("myShell: Command Not Found: %s\n", params[0]);
-        exit(0);  // Exit the child process
-    } else {  // Parent process
-        wait(NULL); // Wait for all child processes
-    }
-    return 0;
+  if (!fork()) {  // Child process
+    execvp(params[0], params); // Execute the cmd
+    //char* error = strerror(errno); // If errors
+    printf("myShell: Command Not Found: %s\n", params[0]);
+    exit(0);  // Exit the child process
+  } else {  // Parent process
+    wait(NULL); // Wait for all child processes
+  }
+  return 0;
 }
 
 // ****************************************************************
@@ -124,13 +123,13 @@ int cmd_exec(char** params)
 // ****************************************************************
 void free_array(char **arr)
 {
-	int i;
-	// empty all elements of array, set it to null and then set it free
-	for(i = 0 ; arr[i]; i++) {
-		memset(arr[i], 0, strlen(arr[i]));
-		arr[i] = NULL;
-		free(arr[i]);
-	}
+  int i;
+  // empty all elements of array, set it to null and then set it free
+  for(i = 0 ; arr[i]; i++) {
+    memset(arr[i], 0, strlen(arr[i]));
+    arr[i] = NULL;
+    free(arr[i]);
+  }
 }
 
 
