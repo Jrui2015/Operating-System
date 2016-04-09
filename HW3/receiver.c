@@ -69,35 +69,35 @@ int main(void)
 	/* infinite loop to wait for user's input */
 	while (1)
 	{
-		/* only if the semaphore value is 0, we do below */
-		if ((sem_value = semctl(semaphore_id, 0, GETVAL)) == 0) {
-			printf("%s\n", "Please enter an alpha numeric string: (enter \"quit\" to quit)");
+	    /* only if the semaphore value is 0, we do below */
+	    if ((sem_value = semctl(semaphore_id, 0, GETVAL)) == 0) {
+		printf("%s\n", "Please enter an alpha numeric string: (enter \"quit\" to quit)");
 
-            /* get alpha numeric strings from the user one line at a time and then validate through user_input*/
-            scanf("%s", user_input);
+            	/* get alpha numeric strings from the user one line at a time and then validate through user_input*/
+        	scanf("%s", user_input);
 
-			/* see if the input is quit */
-            if (strncmp(user_input, "quit", 4) == 0) {
-                memcpy(sharem, user_input, strlen(user_input) + 1); // also tell the processor to quit
+		/* see if the input is quit */
+            	if (strncmp(user_input, "quit", 4) == 0) {
+                	memcpy(sharem, user_input, strlen(user_input) + 1); // also tell the processor to quit
 				break; // jump the loop
-			}
-
-			/* if there is no "C00L" in user's input, just ignore the input */
-            if (strstr(user_input, "C00L") == NULL) {
-				continue;
-			}
-
-			/* if there is "C00L" in input, we can copy this to the shared memory */
-            memcpy(sharem, user_input, strlen(user_input) + 1);
-
-			/* let the "sem_op" in sem_buffer struct to be 1 so we send the signal insead of waitting */
-            sem_buffer.sem_op = 1;
-
-            if (semop(semaphore_id, &sem_buffer, 1) == -1) { // if failed
-                fprintf(stderr, "semaphore operation failed.\n");
-                exit(EXIT_FAILURE);
-            }
 		}
+
+		/* if there is no "C00L" in user's input, just ignore the input */
+            	if (strstr(user_input, "C00L") == NULL) {
+			continue;
+		}
+
+		/* if there is "C00L" in input, we can copy this to the shared memory */
+            	memcpy(sharem, user_input, strlen(user_input) + 1);
+
+		/* let the "sem_op" in sem_buffer struct to be 1 so we send the signal insead of waitting */
+            	sem_buffer.sem_op = 1;
+
+        	if (semop(semaphore_id, &sem_buffer, 1) == -1) { // if failed
+               		fprintf(stderr, "semaphore operation failed.\n");
+                	exit(EXIT_FAILURE);
+            	}
+	    }
 	}
 
 	/* terminate the use of shared memory */
